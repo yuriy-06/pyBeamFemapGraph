@@ -11,7 +11,8 @@ Description: п»їР­С‚РѕС‚ РїР°РєРµС‚ РїСЂРµРґРЅ
         РџСЂРёРјРµСЂ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ:
         ```
         from BeamFemapGraph.BeamFemapGraph import FemapRsuBeam as fm
-        test = fm.FemapRsuBeam(seysmik="G:/temp/analiz/seysmik", wind_x="G:/temp/analiz/wind_x", wind_y="G:/temp/analiz/wind_y")
+        test = fm(seysmik="G:/temp/analiz/seysmik", wind_x="G:/temp/analiz/wind_x", wind_y="G:/temp/analiz/wind_y")
         test.numbers(["1908", "1907"]) # Р·РґРµСЃСЊ СЃР»РµРІР° РЅР°РїСЂР°РІРѕ РљР• Р±Р°Р»РєРё
+        test.numbers([1908, 1907])
         ```
 Platform: UNKNOWN

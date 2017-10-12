@@ -26,15 +26,17 @@ class FemapRsuBeam:
     def numbers(self, mArg):
         pat = "(\d\.\d+E[-+]\d+)\s+"
 
-        for item in mArg:
+        for ke in mArg:
             pass
-            searchPat = "\s+" + str(item) + "\s+\d+\s+\d\s+" + pat + pat + pat + pat + pat + pat
+            searchPat = "\s+" + str(ke) + "\s+\d+\s+\d\s+" + pat + pat + pat + pat + pat + pat
             fPat = re.compile(searchPat)
-            self.mnSm.append(self.eachFileN(self.mLinesSm, fPat, item))
-            self.mnWy.append(self.eachFileN(self.mLinesWy, fPat, item))
-            self.mnWx.append(self.eachFileN(self.mLinesWx, fPat, item))
-        self.plotMy(self.mnSm, 'seysmik_My')
-        self.plotQz(self.mnSm, 'seysmik_Qz')
+            self.mnSm.append(self.eachFileN(self.mLinesSm, fPat, str(ke)))  # append дополнительно оборачиваеи
+            # выводимое значение в массив, поэтому массивы усилий для каждого КЕ оборачиваются своим массивом
+            # массив усилий -> массив сечений -> массив КЕ
+            self.mnWy.append(self.eachFileN(self.mLinesWy, fPat, str(ke)))
+            self.mnWx.append(self.eachFileN(self.mLinesWx, fPat, str(ke)))
+        self.plotMy(self.mnSm, 'seismic_My')
+        self.plotQz(self.mnSm, 'seismic_Qz')
         self.plotMy(self.mnWy, "Wy_My")
         self.plotQz(self.mnWy, "Wy_Qz")
         self.plotMy(self.mnWx, "Wx_My")
@@ -44,18 +46,19 @@ class FemapRsuBeam:
 
     def eachFileN(self, linesInFile, fPat, item):
         m = []
-        for i in linesInFile:
-            f = re.search(fPat, i)
-            if f is not None:  # срабатывает только раз, т.к в файле только один такой КЕ с таким fPat
+        for string in linesInFile:
+            f = re.search(fPat, string)
+            if f is not None:  # срабатывает несколько раз для данного КЕ (несколько сечений)
                 n1 = f.group(1)
                 n2 = f.group(2)
                 n3 = f.group(3)
                 n4 = f.group(4)
                 n5 = f.group(5)
                 n6 = f.group(6)
-                m.append([n1, n2, n3, n4, n5, n6])
+                m.append([n1, n2, n3, n4, n5, n6])  # выводится массив массивов
             if m == []:
-                print("\nнет такого КЕ -- ", item)
+                pass
+                # print("\n нет такого КЕ -- ", item)
         return m
 
     def plotMy(self, m, title):
@@ -67,10 +70,11 @@ class FemapRsuBeam:
     def plotQz(self, m, title):
         self.plot(m, title, 2)
 
-    def plot(self, m, title, n):  # n - это вид усилий
-        i = 0
+    def plot(self, m, title, forceCase):  # forceCase - это вид усилий
+        x = 0
         plt.title(title)
-        for item in m:
-            plt.plot([i, i + 1], [item[0][n], item[1][n]])
-            i = i + 1
+        for ke in m:
+            # массив ke -> массив сечений -> массив усилий
+            plt.plot([x, x + 1], [ke[0][forceCase], ke[1][forceCase]])  # здесь всего 2 сечения, 1-е и второе
+            x = x + 1
         plt.show()
