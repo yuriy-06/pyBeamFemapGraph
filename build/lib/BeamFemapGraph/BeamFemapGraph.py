@@ -76,5 +76,8 @@ class FemapRsuBeam:
         for ke in m:
             # массив ke -> массив сечений -> массив усилий
             plt.plot([x, x + 1], [ke[0][forceCase], ke[1][forceCase]])  # здесь всего 2 сечения, 1-е и второе
+            plt.plot([x, x + 1], [0, 0])
+            plt.ylabel('Force')
+            plt.xlabel('Sections')
             x = x + 1
         plt.show()
