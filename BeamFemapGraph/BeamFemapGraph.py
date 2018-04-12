@@ -1,8 +1,14 @@
 import re
 import matplotlib.pyplot as plt
 
+'''
+from BeamFemapGraph.BeamFemapGraph import FemapRsuBeamGraph as fg
+test = fg(seysmik="G:/temp/analiz/seysmik", wind_x="G:/temp/analiz/wind_x", wind_y="G:/temp/analiz/wind_y")
+fg.numbers(["2125","2126"])
+'''
 
-class FemapRsuBeam:
+
+class FemapRsuBeamGraph:
     def __init__(self, seysmik, wind_y, wind_x):
         self.seysmik = seysmik  # для отладочных целей
         self.wind_y = wind_y
@@ -76,6 +82,7 @@ class FemapRsuBeam:
         self.plot(m, title, 2)
 
     def plot(self, m, title, forceCase):  # forceCase - это вид усилий
+        mx = []; my = []
         plt.subplot(3, 2, self.plotCount)
         self.plotCount += 1
         x = 0
@@ -83,14 +90,13 @@ class FemapRsuBeam:
         for ke in m:
             # массив ke -> массив сечений -> массив усилий
             if self.last == "0":
-                plt.plot([x, x + 1], [ke[1][forceCase], ke[0][forceCase]])  # здесь всего 2 сечения, 1-е и второе
+                mx.append(x); mx.append(x+1)
+                my.append(ke[1][forceCase]); my.append(ke[0][forceCase])
+                plt.xlabel('Sections; direction 0; for help only')
             else:
-                plt.plot([x, x + 1], [ke[0][forceCase], ke[1][forceCase]]) 
-            plt.plot([x, x + 1], [0, 0])
-            #plt.ylabel('Force')
-            #plt.xlabel('Sections')
-            #ax = plt.gca()
-            #ax.spines['left'].set_position('center')
-            #ax.spines['bottom'].set_position('center')
+                mx.append(x); mx.append(x+1)
+                my.append(ke[0][forceCase]); my.append(ke[1][forceCase])
+                plt.xlabel('Sections; directions 1; for help only')
             x = x + 1
-        #plt.show()
+        plt.plot([0, x],[0,0]) # так просто горизонтальную линию печатаем
+        plt.plot(mx,my)
